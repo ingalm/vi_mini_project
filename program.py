@@ -1,12 +1,18 @@
 import os
 from ultralytics import YOLO
-from sklearn.model_selection import train_test_split
+import torch
 
 #PATH = "/cluster/projects/vc/data/ad/open/Poles"
 PATH = "data"  # Main data path
 IMAGE_INPUT_SIZE = 416
 BATCH_SIZE = 16
 EPOCHS = 100
+
+
+# Automatically select the device (GPU if available, otherwise CPU)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
+
 
 # Dataset contains RGB images in .jpg format with labeeled snow poles stored in YOLOv9 format, in a .txt file.
 # Test data is saved in the test folder, and training in the train folder
@@ -48,28 +54,28 @@ model = YOLO('yolov8n.pt')  # Using a pretrained Tiny model from COCO
 # )
 
 # Data configuration for YOLOv8
-data_config = {
-    'path': PATH,
-    'train': os.path.join(PATH, "train_split"),
-    'val': os.path.join(PATH, "val_split"),
-    'test': os.path.join(PATH, "test"),  # Using original validation set as test data
-    'nc': 1,  # Number of classes
-    'names': ['pole']  # Class name
-}
+# data_config = {
+#     'path': PATH,
+#     'train': os.path.join(PATH, "train_split"),
+#     'val': os.path.join(PATH, "val_split"),
+#     'test': os.path.join(PATH, "test"),  # Using original validation set as test data
+#     'nc': 1,  # Number of classes
+#     'names': ['pole']  # Class name
+# }
 
 # Training parameters
 train_params = {
     'imgsz': IMAGE_INPUT_SIZE,
     'epochs': EPOCHS,
     'batch': BATCH_SIZE,
-    'device': 0,  # Change to 'cpu' if you are not using a GPU
+    'device': str(device),  # Change to 'cpu' if you are not using a GPU
     'augment': True  # Enable augmentations (handled internally by YOLOv8)
 }
 
 # Train the model
 print("Training YOLO model...")
 results = model.train(
-    data=data_config,
+    data='data.yaml',
     imgsz=train_params['imgsz'],
     epochs=train_params['epochs'],
     batch=train_params['batch'],
@@ -80,7 +86,7 @@ model.save("best_snow_pole_detector.pt")
 
 print("Evaluating YOLO model on test data...")
 metrics = model.val(
-    data=data_config,
+    data="data.yaml",
     imgsz=train_params['imgsz'],
     split='test'  # Explicitly evaluate on the test (validation) set
 )
