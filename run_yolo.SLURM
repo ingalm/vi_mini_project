@@ -16,8 +16,8 @@
 module purge
 
 # Load necessary modules
-module load Anaconda3
-module load CUDA/12.2                     # Load the CUDA module (adjust version if needed)
+module load Anaconda3/2024.02-1
+module load torchvision/0.16.0-foss-2023a-CUDA-12.1.1
 
 WORKDIR=${SLURM_SUBMIT_DIR}
 cd ${WORKDIR}
@@ -26,8 +26,5 @@ echo "Name of job: $SLURM_JOB_NAME"
 echo "ID of job: $SLURM_JOB_ID"
 echo "The job was run on these nodes: $SLURM_JOB_NODELIST"
 
-# Activate your Conda environment
-source conda activate miniproject_env  # Or use 'conda activate <your-env>'
-
 # Run your Python program
-python3 program.py
+~/.conda/envs/vi_project/bin/python program.py

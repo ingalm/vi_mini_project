@@ -2,8 +2,10 @@ import os
 from ultralytics import YOLO
 import torch
 
-#PATH = "/cluster/projects/vc/data/ad/open/Poles"
-PATH = "data"  # Main data path
+### This program is intended to be used to train a YOLO model on a snow pole dataset.
+### The dataset is expected to be preprocessed by the preprocessing.py script.
+
+
 IMAGE_INPUT_SIZE = 416
 BATCH_SIZE = 16
 EPOCHS = 100
@@ -36,7 +38,7 @@ print(f"Using device: {device}")
 # These metrics can be calculated using YOLO's evaluation tools
 
 # YOLO model
-model = YOLO('yolov8n.pt')  # Using a pretrained Tiny model from COCO
+model = YOLO('yolov9t.yaml')  # Using a pretrained Tiny model from COCO
 
 
 # TRAIN_IMAGES_PATH = os.path.join(PATH, "train/images")
@@ -65,7 +67,6 @@ model = YOLO('yolov8n.pt')  # Using a pretrained Tiny model from COCO
 
 # Training parameters
 train_params = {
-    'imgsz': IMAGE_INPUT_SIZE,
     'epochs': EPOCHS,
     'batch': BATCH_SIZE,
     'device': str(device),  # Change to 'cpu' if you are not using a GPU
@@ -75,33 +76,11 @@ train_params = {
 # Train the model
 print("Training YOLO model...")
 results = model.train(
-    data='data.yaml',
-    imgsz=train_params['imgsz'],
+    data= 'data.yaml',
     epochs=train_params['epochs'],
     batch=train_params['batch'],
-    device=train_params['device']
+    device=train_params['device'],
+    patience=10,
 )
 
 model.save("best_snow_pole_detector.pt")
-
-print("Evaluating YOLO model on test data...")
-metrics = model.val(
-    data="data.yaml",
-    imgsz=train_params['imgsz'],
-    split='test'  # Explicitly evaluate on the test (validation) set
-)
-
-# Display evaluation metrics
-print("Evaluation Results:")
-print(f"Precision: {metrics['precision']:.3f}")
-print(f"Recall: {metrics['recall']:.3f}")
-print(f"mAP@50: {metrics['map50']:.3f}")
-print(f"mAP@0.5:0.95: {metrics['map']:.3f}")
-
-# Evaluate the model on the test data
-def test_real_time_inference(image_path):
-    print(f"Running real-time inference on {image_path}")
-    results = model.predict(image_path)
-    results.show()  # Display results with bounding boxes
-
-# test_real_time_inference(os.path.join(VALID_IMAGES_PATH, 'combined_image_96_png.rf.fc3591e525c1066cc77964dc56a47299.jpg'))

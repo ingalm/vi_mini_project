@@ -1,61 +1,50 @@
-Lmod has detected the following error: These module(s) or extension(s) exist
-but cannot be loaded as requested: "Anaconda3"
-   Try: "module spider Anaconda3" to see how to load the module(s).
-
-
-
-Lmod has detected the following error: The following module(s) are unknown:
-"CUDA/12.2"
-
-Please check the spelling or version number. Also try "module spider ..."
-It is also possible your cache file is out-of-date; it may help to try:
-  $ module --ignore_cache load "CUDA/12.2"
-
-Also make sure that all modulefiles written in TCL start with the string
-#%Module
-
-
-
-/cluster/apps/eb/software/Anaconda3/2023.09-0/bin/conda: line 3: import: command not found
-/cluster/apps/eb/software/Anaconda3/2023.09-0/bin/conda: line 6: syntax error near unexpected token `sys.argv'
-/cluster/apps/eb/software/Anaconda3/2023.09-0/bin/conda: line 6: `if len(sys.argv) > 1 and sys.argv[1].startswith('shell.') and sys.path and sys.path[0] == '':'
 Traceback (most recent call last):
-  File "/cluster/home/evaajo/vi_mini_project/program.py", line 77, in <module>
-    results = model.train(
-              ^^^^^^^^^^^^
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/engine/model.py", line 802, in train
-    self.trainer.train()
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/engine/trainer.py", line 207, in train
-    self._do_train(world_size)
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/engine/trainer.py", line 327, in _do_train
-    self._setup_train(world_size)
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/engine/trainer.py", line 291, in _setup_train
-    self.train_loader = self.get_dataloader(self.trainset, batch_size=batch_size, rank=LOCAL_RANK, mode="train")
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/models/yolo/detect/train.py", line 49, in get_dataloader
-    dataset = self.build_dataset(dataset_path, mode, batch_size)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/models/yolo/detect/train.py", line 43, in build_dataset
-    return build_yolo_dataset(self.args, img_path, batch, self.data, mode=mode, rect=mode == "val", stride=gs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/data/build.py", line 87, in build_yolo_dataset
-    return dataset(
-           ^^^^^^^^
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/data/dataset.py", line 64, in __init__
-    super().__init__(*args, **kwargs)
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/data/base.py", line 74, in __init__
-    self.labels = self.get_labels()
-                  ^^^^^^^^^^^^^^^^^
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/data/dataset.py", line 138, in get_labels
-    cache, exists = load_dataset_cache_file(cache_path), True  # attempt to load a *.cache file
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/home/evaajo/.local/lib/python3.11/site-packages/ultralytics/data/utils.py", line 659, in load_dataset_cache_file
-    cache = np.load(str(path), allow_pickle=True).item()  # load dict
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/apps/eb/software/Anaconda3/2023.09-0/lib/python3.11/site-packages/numpy/lib/npyio.py", line 432, in load
-    return format.read_array(fid, allow_pickle=allow_pickle,
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/cluster/apps/eb/software/Anaconda3/2023.09-0/lib/python3.11/site-packages/numpy/lib/format.py", line 792, in read_array
-    array = pickle.load(fp, **pickle_kwargs)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ModuleNotFoundError: No module named 'numpy._core'
+  File "/cluster/apps/eb/software/SciPy-bundle/2023.07-gfbf-2023a/lib/python3.11/site-packages/numpy/core/__init__.py", line 23, in <module>
+    from . import multiarray
+  File "/cluster/apps/eb/software/SciPy-bundle/2023.07-gfbf-2023a/lib/python3.11/site-packages/numpy/core/multiarray.py", line 10, in <module>
+    from . import overrides
+  File "/cluster/apps/eb/software/SciPy-bundle/2023.07-gfbf-2023a/lib/python3.11/site-packages/numpy/core/overrides.py", line 8, in <module>
+    from numpy.core._multiarray_umath import (
+ModuleNotFoundError: No module named 'numpy.core._multiarray_umath'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/cluster/home/ingval/vi_mini_project/program.py", line 2, in <module>
+    from ultralytics import YOLO
+  File "/cluster/home/ingval/.conda/envs/vi_project/lib/python3.10/site-packages/ultralytics/__init__.py", line 11, in <module>
+    from ultralytics.models import NAS, RTDETR, SAM, YOLO, FastSAM, YOLOWorld
+  File "/cluster/home/ingval/.conda/envs/vi_project/lib/python3.10/site-packages/ultralytics/models/__init__.py", line 3, in <module>
+    from .fastsam import FastSAM
+  File "/cluster/home/ingval/.conda/envs/vi_project/lib/python3.10/site-packages/ultralytics/models/fastsam/__init__.py", line 3, in <module>
+    from .model import FastSAM
+  File "/cluster/home/ingval/.conda/envs/vi_project/lib/python3.10/site-packages/ultralytics/models/fastsam/model.py", line 5, in <module>
+    from ultralytics.engine.model import Model
+  File "/cluster/home/ingval/.conda/envs/vi_project/lib/python3.10/site-packages/ultralytics/engine/model.py", line 7, in <module>
+    import numpy as np
+  File "/cluster/apps/eb/software/SciPy-bundle/2023.07-gfbf-2023a/lib/python3.11/site-packages/numpy/__init__.py", line 139, in <module>
+    from . import core
+  File "/cluster/apps/eb/software/SciPy-bundle/2023.07-gfbf-2023a/lib/python3.11/site-packages/numpy/core/__init__.py", line 49, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.10 from "/cluster/home/ingval/.conda/envs/vi_project/bin/python"
+  * The NumPy version is: "1.25.1"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: No module named 'numpy.core._multiarray_umath'
+
