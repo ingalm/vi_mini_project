@@ -2,6 +2,10 @@
 import os
 import shutil
 from sklearn.model_selection import train_test_split
+import albumentations as A
+import cv2
+from tqdm import tqdm
+
 
 # File intended to be used to preprocess the dataset for the YOLO models.
 # The dataset is expected to be in the following structure:
@@ -19,6 +23,10 @@ from sklearn.model_selection import train_test_split
 #
 
 PATH = "../../../projects/vc/data/ad/open/Poles"
+# Save the processed dataset
+SAVE_PATH = "datasets"
+
+addAugmentedSamples = True
 
 folders = ['train', 'test', 'valid']
 
@@ -37,8 +45,73 @@ def process_for_missing_images_or_labels(folder):
     
     return final_images, final_labels
 
-# Save the processed dataset
-SAVE_PATH = "datasets"
+def load_annotations(label_path):
+    """
+    Loads YOLO formatted annotations and converts to Albumentations format.
+    """
+    with open(label_path, 'r') as file:
+        lines = file.readlines()
+    bboxes = []
+    for line in lines:
+        label, x_center, y_center, width, height = map(float, line.strip().split())
+        bboxes.append([x_center, y_center, width, height, int(label)])
+    return bboxes
+
+def save_annotations(label_path, bboxes):
+    """
+    Saves augmented YOLO annotations back to file.
+    """
+    with open(label_path, 'w') as file:
+        for bbox in bboxes:
+            label, x_center, y_center, width, height = bbox[-1], *bbox[:-1]
+            file.write(f"{label} {x_center} {y_center} {width} {height}\n")
+
+def augment_and_add_to_dataset(images, labels, aug_pipeline, save_image_dir, save_label_dir):
+    """
+    Applies augmentations and adds them as additional samples in the dataset.
+    """
+    for image_name, label_name in tqdm(zip(images, labels), total=len(images), desc="Augmenting"):
+        image_path = os.path.join(PATH, "train/images", image_name)
+        label_path = os.path.join(PATH, "train/labels", label_name)
+
+        # Load image and annotations
+        image = cv2.imread(image_path)
+        bboxes = load_annotations(label_path)
+
+        # Apply augmentations
+        augmented = aug_pipeline(image=image, bboxes=bboxes)
+        augmented_image = augmented["image"]
+        augmented_bboxes = augmented["bboxes"]
+
+        # Save augmented image and labels
+        augmented_image_name = f"aug_{image_name}"
+        augmented_label_name = f"aug_{label_name}"
+        cv2.imwrite(os.path.join(save_image_dir, augmented_image_name), augmented_image)
+        save_annotations(os.path.join(save_label_dir, augmented_label_name), augmented_bboxes)
+
+# Augmentation pipeline
+# augmentation_pipeline = A.Compose(
+#     [
+#         A.HorizontalFlip(p=0.5),
+#         A.RandomBrightnessContrast(p=0.2),
+#         A.Blur(p=0.1),
+#         A.Rotate(limit=15, p=0.5),
+#     ],
+#     bbox_params=A.BboxParams(format='yolo')
+# )
+
+augmentation_pipeline = A.Compose(
+    [
+        A.HorizontalFlip(p=0.5),
+        A.RandomBrightnessContrast(p=0.2),
+        A.RandomFog(p=0.1),
+        A.RandomSnow(p=0.1),
+        A.RandomRain(p=0.1),
+        A.RandomSunFlare(p=0.1),
+        A.RandomShadow(p=0.1),
+    ],
+    bbox_params=A.BboxParams(format='yolo')
+)
 
 if os.path.exists(SAVE_PATH):
     print("Removing old dataset files...")
@@ -65,6 +138,16 @@ for folder in folders:
             os.makedirs(f"{SAVE_PATH}/train/labels", exist_ok=True)
             shutil.copy(f"{PATH}/{folder}/images/{image}", f"{SAVE_PATH}/train/images/{image}")
             shutil.copy(f"{PATH}/{folder}/labels/{label}", f"{SAVE_PATH}/train/labels/{label}")
+            
+        # Add augmented samples to training dataset
+        if(addAugmentedSamples):
+            augment_and_add_to_dataset(
+                train_images,
+                train_labels,
+                augmentation_pipeline,
+                f"{SAVE_PATH}/train/images",
+                f"{SAVE_PATH}/train/labels",
+            )
 
         # Copy validation subset
         for image, label in zip(valid_images, valid_labels):

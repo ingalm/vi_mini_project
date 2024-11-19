@@ -2,5 +2,5 @@
 pyproject.toml
 poetry.lock
 .DS_Store
-datasets/
 original_dataset_YOLOv8/
+datasets/

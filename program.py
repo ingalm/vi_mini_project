@@ -5,12 +5,6 @@ import torch
 ### This program is intended to be used to train a YOLO model on a snow pole dataset.
 ### The dataset is expected to be preprocessed by the preprocessing.py script.
 
-
-IMAGE_INPUT_SIZE = 416
-BATCH_SIZE = 16
-EPOCHS = 100
-
-
 # Automatically select the device (GPU if available, otherwise CPU)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
@@ -27,18 +21,12 @@ print(f"Using device: {device}")
 # Input size: Keep realitvely small to reduce computational requirements to optimize for speed and compatibility with edge devices.
 
 # Strategy: 
-# Begin with a pretrained model on COCO dataset, and fine-tune on the snow pole dataset, using transfer learning to reduce training time and improve accuracy.
 # Try different YOLO models and compare performance to find the best model for the task.
+# Try to use transfer learning to speed up training and improve performance.
 
-# Evaluation metrics:
-# – Precision
-# – Recall
-# – map@50
-# – mAP@0.5:0.95
-# These metrics can be calculated using YOLO's evaluation tools
 
 # YOLO model
-model = YOLO('yolov9t.yaml')  # Using a pretrained Tiny model from COCO
+model = YOLO('yolov9s.pt')  # Using a pretrained Tiny model from COCO
 
 
 # TRAIN_IMAGES_PATH = os.path.join(PATH, "train/images")
@@ -67,11 +55,23 @@ model = YOLO('yolov9t.yaml')  # Using a pretrained Tiny model from COCO
 
 # Training parameters
 train_params = {
-    'epochs': EPOCHS,
-    'batch': BATCH_SIZE,
-    'device': str(device),  # Change to 'cpu' if you are not using a GPU
-    'augment': True  # Enable augmentations (handled internally by YOLOv8)
+    'epochs': 150,
+    'batch': 32,
+    'device': str(device),
+    'augment': True,
+    "workers": 10,
+    "dropout": 0.2,
+    "cls": 0.5, # Class weight. To account for class imbalance
+    "dfl": 2, # Default class weight
+    "box": 9, # Box loss weight
+    #"mixup": 0.1, # Mixup augmentation
 }
+
+# Next plans for training:
+# Train as it stands now. added cls, dfl and box changes
+# Add mixup augmentation
+# Try ground up training with a small model
+# Try YOLOv11 model
 
 # Train the model
 print("Training YOLO model...")
@@ -81,6 +81,10 @@ results = model.train(
     batch=train_params['batch'],
     device=train_params['device'],
     patience=10,
+    augment=train_params['augment'],
+    workers=train_params['workers'],
+    dropout=train_params['dropout'],
+    cls=train_params['cls'],
+    dfl=train_params['dfl'],
+    box=train_params['box'],
 )
-
-model.save("best_snow_pole_detector.pt")
