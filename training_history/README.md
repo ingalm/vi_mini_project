@@ -10,4 +10,3 @@
 - Train30: YOLOv9s, with custom old augmentation, transfer learning. Batch size 32
 - Train31: YOLOv9s, with custom new augmentation, transfer learning. Batch size 32
 - Train32: YOLOv9s, with custom new augmentation, transfer learning. Batch size 32, and cls weight 0.8
-- Train33: YOLOv9s, with custom new augmentation, transfer learning. Batch size 32, and cls weight 0.5, box weight 9, dfl weight 2
