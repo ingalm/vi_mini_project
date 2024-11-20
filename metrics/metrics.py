@@ -1,7 +1,7 @@
 # This file is used to calculate the metrics of a loaded model
 from ultralytics import YOLO
 
-PATH = "runs/detect/train26/weights/best.pt"
+PATH = "./runs/detect/train34_mixup/weights/best.pt"
 model = YOLO(PATH)
 
 print("Evaluating YOLO model on test data...")

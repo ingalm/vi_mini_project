@@ -109,8 +109,10 @@ augmentation_pipeline = A.Compose(
         A.RandomRain(p=0.1),
         A.RandomSunFlare(p=0.1),
         A.RandomShadow(p=0.1),
+        A.CropNonEmptyBoundingBox(width=100, height=128),
     ],
-    bbox_params=A.BboxParams(format='yolo')
+    bbox_params=A.BboxParams(format='yolo'),
+    label_fields=[0]
 )
 
 if os.path.exists(SAVE_PATH):
@@ -150,9 +152,9 @@ for folder in folders:
             )
 
         # Copy validation subset
+        os.makedirs(f"{SAVE_PATH}/valid/images", exist_ok=True)
+        os.makedirs(f"{SAVE_PATH}/valid/labels", exist_ok=True)
         for image, label in zip(valid_images, valid_labels):
-            os.makedirs(f"{SAVE_PATH}/valid/images", exist_ok=True)
-            os.makedirs(f"{SAVE_PATH}/valid/labels", exist_ok=True)
             shutil.copy(f"{PATH}/{folder}/images/{image}", f"{SAVE_PATH}/valid/images/{image}")
             shutil.copy(f"{PATH}/{folder}/labels/{label}", f"{SAVE_PATH}/valid/labels/{label}")
 

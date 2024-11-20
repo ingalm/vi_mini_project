@@ -58,18 +58,16 @@ train_params = {
     'epochs': 150,
     'batch': 32,
     'device': str(device),
-    'augment': True,
+    'augment': False,
     "workers": 10,
     "dropout": 0.2,
-    "cls": 0.5, # Class weight. To account for class imbalance
+    "optimizer": "adamW",
+    "cls": 0.8, # Class weight. To account for class imbalance
     "dfl": 2, # Default class weight
     "box": 9, # Box loss weight
-    #"mixup": 0.1, # Mixup augmentation
 }
 
 # Next plans for training:
-# Train as it stands now. added cls, dfl and box changes
-# Add mixup augmentation
 # Try ground up training with a small model
 # Try YOLOv11 model
 
@@ -85,6 +83,5 @@ results = model.train(
     workers=train_params['workers'],
     dropout=train_params['dropout'],
     cls=train_params['cls'],
-    dfl=train_params['dfl'],
-    box=train_params['box'],
+    optimizer=train_params['optimizer'],
 )
