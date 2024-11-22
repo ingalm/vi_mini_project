@@ -3,7 +3,23 @@ from ultralytics import YOLO
 from tabulate import tabulate
 import numpy as np
 
-models_to_evaluate = ["train17", "train19", "train20", "train27", "train29", "train30", "train31", "train32"]
+models_to_evaluate = ["train17", "train19", "train20", "train27", "train29", "train30", "train31", "train32", "train39", "train41", "train47", "train49"]
+
+# - Train17: YOLOv9t, no augmentation. Batch size 16 (Transfer learning?)
+# - Train19: YOLOv9s, no augmentation. Batch size 16 (Transfer learning?)
+# - Train20: YOLOv9s, with augmentation. Batch size 16 (Transfer learning?)
+# - Train27: YOLOv9s, with augmentation, transfer learning from weights. Batch size 32
+# - Train28: YOLOv9s, with augmentation and dropout, transfer learning. Batch size 32
+# - Train29: train28.pt: YOLOv9s, with augmentation and dropout, transfer learning. Batch size 32., 150 more epochs.
+# - Train30: YOLOv9s, with custom old augmentation, transfer learning. Batch size 32
+# - Train31: YOLOv9s, with custom new augmentation, transfer learning. Batch size 32
+# - Train32: YOLOv9s, with custom new augmentation, transfer learning. Batch size 32, and cls weight 0.8
+# - Train39: Only cut images in train set, augmented. Cls=0.8
+# - Train41: Cut and normal images, all augmented. Cls=0.5, box=12, dfl=3
+# - Train47: With rotation av vertical flip to augmentation. Base Train32. SGD optimizer
+# - Train47: Dataset from train32. SGD optimizer.
+# - Train50: Dataset from train32. SGD optimizer. YOLO11s.pt
+
 metrics = []
 
 for i in models_to_evaluate:

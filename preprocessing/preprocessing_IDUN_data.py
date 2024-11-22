@@ -83,12 +83,14 @@ def augment_and_add_to_dataset(images, labels, aug_pipeline, save_image_dir, sav
         augmented_image = augmented["image"]
         augmented_bboxes = augmented["bboxes"]
 
-        # Save augmented image and labels
-        augmented_image_name = f"aug_{image_name}"
-        augmented_label_name = f"aug_{label_name}"
-        cv2.imwrite(os.path.join(save_image_dir, augmented_image_name), augmented_image)
-        save_annotations(os.path.join(save_label_dir, augmented_label_name), augmented_bboxes)
+        if augmented_bboxes: # Only save augmented samples with bounding boxes
+            # Save augmented image and labels
+            augmented_image_name = f"aug_{image_name}"
+            augmented_label_name = f"aug_{label_name}"
+            cv2.imwrite(os.path.join(save_image_dir, augmented_image_name), augmented_image)
+            save_annotations(os.path.join(save_label_dir, augmented_label_name), augmented_bboxes)
 
+# Old
 # Augmentation pipeline
 # augmentation_pipeline = A.Compose(
 #     [
@@ -100,6 +102,7 @@ def augment_and_add_to_dataset(images, labels, aug_pipeline, save_image_dir, sav
 #     bbox_params=A.BboxParams(format='yolo')
 # )
 
+# New
 augmentation_pipeline = A.Compose(
     [
         A.HorizontalFlip(p=0.5),
@@ -107,13 +110,21 @@ augmentation_pipeline = A.Compose(
         A.RandomFog(p=0.1),
         A.RandomSnow(p=0.1),
         A.RandomRain(p=0.1),
-        A.RandomSunFlare(p=0.1),
         A.RandomShadow(p=0.1),
-        A.CropNonEmptyBoundingBox(width=100, height=128),
     ],
-    bbox_params=A.BboxParams(format='yolo'),
-    label_fields=[0]
+    bbox_params=A.BboxParams(format='yolo')
 )
+
+# Newnew
+# augmentation_pipeline = A.Compose(
+#     [
+#         A.HorizontalFlip(p=0.5),
+#         A.VerticalFlip(p=0.5),
+#         A.Rotate(limit=15, p=0.5),
+#         A.RandomBrightnessContrast(p=0.2),
+#     ],
+#     bbox_params=A.BboxParams(format='yolo'),
+# )
 
 if os.path.exists(SAVE_PATH):
     print("Removing old dataset files...")
@@ -131,7 +142,7 @@ for folder in folders:
     if folder == "train":
         # Split train data into train and validation subsets
         train_images, valid_images, train_labels, valid_labels = train_test_split(
-            images, labels, test_size=0.2, random_state=42
+            images, labels, test_size=0.25, random_state=42
         )
 
         # Copy train subset

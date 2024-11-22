@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 import albumentations as A
 import cv2
 from tqdm import tqdm
+import numpy as np
 
 
 PATH = "../../../projects/vc/data/ad/open/Poles"
@@ -120,7 +121,7 @@ def cut_and_add_patches_to_dataset(images, labels, save_image_dir, save_label_di
                         patch_bboxes.append([new_x_center, new_y_center, new_width, new_height, label])
 
                 # Save the patch only if it contains bounding boxes
-                if patch_bboxes:
+                if patch_bboxes and np.random.rand() < 0.30:
                     patch_name = f"patch_{i}_{j}_{image_name}"
                     patch_label_name = f"patch_{i}_{j}_{label_name}"
                     cv2.imwrite(os.path.join(save_image_dir, patch_name), patch)
@@ -145,12 +146,9 @@ def cut_and_add_patches_to_dataset(images, labels, save_image_dir, save_label_di
 augmentation_pipeline = A.Compose(
     [
         A.HorizontalFlip(p=0.5),
+        A.VerticalFlip(p=0.5),
+        A.Rotate(limit=50, p=0.5),
         A.RandomBrightnessContrast(p=0.2),
-        A.RandomFog(p=0.1),
-        A.RandomSnow(p=0.1),
-        A.RandomRain(p=0.1),
-        A.RandomSunFlare(p=0.1),
-        A.RandomShadow(p=0.1),
     ],
     bbox_params=A.BboxParams(format='yolo'),
 )
@@ -168,7 +166,7 @@ for folder in folders:
 
     if folder == "train":
         train_images, valid_images, train_labels, valid_labels = train_test_split(
-            images, labels, test_size=0.2, random_state=42
+            images, labels, test_size=0.30, random_state=42
         )
 
         # Copy train subset
@@ -186,15 +184,15 @@ for folder in folders:
                 PATCH_WIDTH
             )
             
-        # Add augmented samples
-        if addAugmentedSamples:
-            augment_and_add_to_dataset(
-                train_images,
-                train_labels,
-                augmentation_pipeline,
-                f"{SAVE_PATH}/train/images",
-                f"{SAVE_PATH}/train/labels",
-            )
+        # # Add augmented samples
+        # if addAugmentedSamples:
+        #     augment_and_add_to_dataset(
+        #         train_images,
+        #         train_labels,
+        #         augmentation_pipeline,
+        #         f"{SAVE_PATH}/train/images",
+        #         f"{SAVE_PATH}/train/labels",
+        #     )
 
         # Copy validation subset
         os.makedirs(f"{SAVE_PATH}/valid/images", exist_ok=True)

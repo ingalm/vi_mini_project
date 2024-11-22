@@ -26,7 +26,7 @@ print(f"Using device: {device}")
 
 
 # YOLO model
-model = YOLO('yolov9s.pt')  # Using a pretrained Tiny model from COCO
+model = YOLO('yolo11s.pt')  # Using a pretrained Tiny model from COCO
 
 
 # TRAIN_IMAGES_PATH = os.path.join(PATH, "train/images")
@@ -58,18 +58,15 @@ train_params = {
     'epochs': 150,
     'batch': 32,
     'device': str(device),
-    'augment': False,
+    'augment': True,
     "workers": 10,
     "dropout": 0.2,
-    "optimizer": "adamW",
     "cls": 0.8, # Class weight. To account for class imbalance
-    "dfl": 2, # Default class weight
-    "box": 9, # Box loss weight
 }
 
-# Next plans for training:
-# Try ground up training with a small model
-# Try YOLOv11 model
+# Next steps:
+# 1. Train the model as is set up. New augmentation style. Se preprocessing_IDUN. Base is Train32
+
 
 # Train the model
 print("Training YOLO model...")
@@ -78,7 +75,7 @@ results = model.train(
     epochs=train_params['epochs'],
     batch=train_params['batch'],
     device=train_params['device'],
-    patience=10,
+    patience=20,
     augment=train_params['augment'],
     workers=train_params['workers'],
     dropout=train_params['dropout'],
