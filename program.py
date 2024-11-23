@@ -26,7 +26,7 @@ print(f"Using device: {device}")
 
 
 # YOLO model
-model = YOLO('yolo11s.pt')  # Using a pretrained Tiny model from COCO
+model = YOLO('yolov8s.pt')  # Using a pretrained Tiny model from COCO
 
 
 # TRAIN_IMAGES_PATH = os.path.join(PATH, "train/images")
@@ -62,6 +62,7 @@ train_params = {
     "workers": 10,
     "dropout": 0.2,
     "cls": 0.8, # Class weight. To account for class imbalance
+    "img_size": 1024,
 }
 
 # Next steps:
@@ -80,5 +81,4 @@ results = model.train(
     workers=train_params['workers'],
     dropout=train_params['dropout'],
     cls=train_params['cls'],
-    optimizer=train_params['optimizer'],
 )
