@@ -26,7 +26,7 @@ print(f"Using device: {device}")
 
 
 # YOLO model
-model = YOLO('yolov8s.pt')  # Using a pretrained Tiny model from COCO
+model = YOLO('yolov9s.pt')  # Using a pretrained Tiny model from COCO
 
 
 # TRAIN_IMAGES_PATH = os.path.join(PATH, "train/images")
@@ -72,6 +72,7 @@ train_params = {
 # Train the model
 print("Training YOLO model...")
 results = model.train(
+    name = 'yolov9s_hyp_aug',
     data= 'data.yaml',
     epochs=train_params['epochs'],
     batch=train_params['batch'],

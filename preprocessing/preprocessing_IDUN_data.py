@@ -26,7 +26,7 @@ PATH = "../../../projects/vc/data/ad/open/Poles"
 # Save the processed dataset
 SAVE_PATH = "datasets"
 
-addAugmentedSamples = True
+addAugmentedSamples = False
 
 folders = ['train', 'test', 'valid']
 
@@ -142,7 +142,7 @@ for folder in folders:
     if folder == "train":
         # Split train data into train and validation subsets
         train_images, valid_images, train_labels, valid_labels = train_test_split(
-            images, labels, test_size=0.25, random_state=42
+            images, labels, test_size=0.20, random_state=42
         )
 
         # Copy train subset

@@ -1,14 +1,14 @@
 #!/bin/sh
 #SBATCH --account=ie-idi       
-#SBATCH --job-name Yolo11pt
+#SBATCH --job-name Yolov9s_hyp_aug
 #SBATCH --time=0-01:00:00         # format: D-HH:MM:SS
 
 #SBATCH --partition=GPUQ          # Asking for a GPU
 #SBATCH --gres=gpu:1             # Setting the number of GPUs to 1
 #SBATCH --mem=200G                 # Asking for 16GB RAM
 #SBATCH --nodes=1
-#SBATCH --output=/cluster/work/evaajo/vi_mini_project/Yolo11pt.txt    
-#SBATCH --error=/cluster/work/evaajo/vi_mini_project/Yolo11pt_output.err       
+#SBATCH --output=/cluster/work/evaajo/vi_mini_project/Yolov9s_hyp_aug.txt    
+#SBATCH --error=/cluster/work/evaajo/vi_mini_project/Yolov9s_hyp_aug_output.err       
 
 #SBATCH --mail-user=evaajo@stud.ntnu.no
 #SBATCH --mail-type=ALL
