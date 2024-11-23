@@ -18,3 +18,17 @@
 - Train46: Added rotation and vertical flip to augmentation. Base was Train32
 - Train47: With rotation av vertical flip to augmentation. Base Train32. SGD optimizer
 - Train47: Dataset from train32. SGD optimizer.
+- Train33_A: YOLOv9s, with costum new augmentation, transfer learning.
+    'epochs': 150,
+    'batch': 32,
+    'device': str(device),
+    'augment': True,
+    "workers": 10,
+    "dropout": 0.2,
+    "cls": 0.5, 
+    "dfl": 2, 
+    "box": 9,
+- Train34_A: yolo11 mAP@0.5:0.95: 0.271
+- Train35_A: augmentation = false
+- Train36_A: 200 epochs
+- Train37_A: batch = 64
