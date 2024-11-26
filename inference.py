@@ -6,9 +6,9 @@ from pathlib import Path
 
 
 models = {
-    "YOLO8": "./runs/detect/8s_cls-2-sgd/weights/best.pt",
-    "YOLO9": "./runs/detect/train32/weights/best.pt",
-    "YOLO11": "./runs/detect/train50_cls0.8_sgd_yolo11/weights/best.pt"
+    #"YOLO8": "./runs/detect/yolo11s.pt_sgd/weights/best.pt",
+    "YOLO9": "./runs/detect/yolov9s.pt_adam_cut/weights/best.pt",
+    #"YOLO11": "./runs/detect/yolov8s.pt_sgd/weights/best.pt"
 }
 
 def load_model(model_path):

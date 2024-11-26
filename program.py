@@ -26,7 +26,8 @@ print(f"Using device: {device}")
 
 
 # YOLO model
-model = YOLO('yolo11s.pt')  # Using a pretrained Tiny model from COCO
+model_name = 'yolo11s.pt'
+model = YOLO(model_name)  # Using a pretrained Tiny model from COCO
 
 
 # TRAIN_IMAGES_PATH = os.path.join(PATH, "train/images")
@@ -59,9 +60,12 @@ train_params = {
     'batch': 32,
     'device': str(device),
     'augment': True,
-    "workers": 10,
     "dropout": 0.2,
-    "cls": 0.8, # Class weight. To account for class imbalance
+    "cls": 0.8,
+    "optimizer": "sgd",
+    'patience': 10,
+    'imgsz': 1024,
+    'mosaic': 1.0,
 }
 
 # Next steps:
@@ -71,14 +75,15 @@ train_params = {
 # Train the model
 print("Training YOLO model...")
 results = model.train(
+    name=f"{model_name}_{train_params['optimizer']}_cut",
     data= 'data.yaml',
     epochs=train_params['epochs'],
     batch=train_params['batch'],
     device=train_params['device'],
     patience=20,
     augment=train_params['augment'],
-    workers=train_params['workers'],
     dropout=train_params['dropout'],
     cls=train_params['cls'],
     optimizer=train_params['optimizer'],
+    imgsz=1024,
 )
