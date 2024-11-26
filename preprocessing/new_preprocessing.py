@@ -10,9 +10,9 @@ import numpy as np
 PATH = "../../../projects/vc/data/ad/open/Poles"
 SAVE_PATH = "./datasets"
 
-addAugmentedSamples = True
-cutIntoPatches = True  # Enable cutting into patches
-PATCH_WIDTH = 128       # Define patch size (e.g., 128x128)
+addAugmentedSamples = False
+cutIntoPatches = True 
+PATCH_WIDTH = 128    
 
 folders = ['train', 'test', 'valid']
 
@@ -166,7 +166,7 @@ for folder in folders:
 
     if folder == "train":
         train_images, valid_images, train_labels, valid_labels = train_test_split(
-            images, labels, test_size=0.30, random_state=42
+            images, labels, test_size=0.25, random_state=42
         )
 
         # Copy train subset
@@ -184,15 +184,15 @@ for folder in folders:
                 PATCH_WIDTH
             )
             
-        # # Add augmented samples
-        # if addAugmentedSamples:
-        #     augment_and_add_to_dataset(
-        #         train_images,
-        #         train_labels,
-        #         augmentation_pipeline,
-        #         f"{SAVE_PATH}/train/images",
-        #         f"{SAVE_PATH}/train/labels",
-        #     )
+        # Add augmented samples
+        if addAugmentedSamples:
+            augment_and_add_to_dataset(
+                train_images,
+                train_labels,
+                augmentation_pipeline,
+                f"{SAVE_PATH}/train/images",
+                f"{SAVE_PATH}/train/labels",
+            )
 
         # Copy validation subset
         os.makedirs(f"{SAVE_PATH}/valid/images", exist_ok=True)

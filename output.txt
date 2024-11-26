@@ -1,4 +1,0 @@
-Running from this directory: /cluster/home/ingval/vi_mini_project
-Name of job: VI-miniproject
-ID of job: 20897877
-The job was run on these nodes: idun-01-04

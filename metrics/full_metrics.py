@@ -3,7 +3,9 @@ from ultralytics import YOLO
 from tabulate import tabulate
 import numpy as np
 
-models_to_evaluate = ["train17", "train19", "train20", "train27", "train29", "train30", "train31", "train32", "train39", "train41", "train47", "train49"]
+#models_to_evaluate = ["8n", "8s", "8s_cls-2-sgd", "train17", "train19", "train30", "train31", "train32", "train39_cut_cls0.8", "train40A", "train41_cutandnormal_cls_dfl_box_changed", "train47_cls0.8_sgd_yolo9", "train50_cls0.8_sgd_yolo11", "train54_cls1.5_sgd_yolo11"]
+models_to_evaluate = ["yolo11s.pt_adam", "yolo11s.pt_sgd", "yolov9s.pt_adam", "yolov9s.pt_sgd", "yolov8s.pt_adam", "yolov8s.pt_sgd", "yolov8n.pt_sgd"]
+
 
 # - Train17: YOLOv9t, no augmentation. Batch size 16 (Transfer learning?)
 # - Train19: YOLOv9s, no augmentation. Batch size 16 (Transfer learning?)
@@ -19,6 +21,7 @@ models_to_evaluate = ["train17", "train19", "train20", "train27", "train29", "tr
 # - Train47: With rotation av vertical flip to augmentation. Base Train32. SGD optimizer
 # - Train47: Dataset from train32. SGD optimizer.
 # - Train50: Dataset from train32. SGD optimizer. YOLO11s.pt
+# - Train54: Same as train50, but cls=1.5
 
 metrics = []
 
